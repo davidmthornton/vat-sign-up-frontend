@@ -82,8 +82,6 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val changesToVat = runModeConfiguration.getBoolean("microservice.services.features.changes-to-vat").getOrElse(false)
   lazy val changesToVatUrl = runModeConfiguration.getString("urls.external.govuk.changesToVat").getOrElse("")
 
-  lazy val claimMtdVatEnrolmentUrl = runModeConfiguration.getString("urls.addMtdVatEnrolmentUrl").getOrElse("")
-
   lazy val useEmacVatEnrolment = runModeConfiguration.getBoolean("microservice.services.features.emac-vat-enrolment").getOrElse(false)
   lazy val emacVatEnrolmentUrl = loadConfig("urls.external.emac.enrol")
 

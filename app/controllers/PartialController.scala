@@ -17,40 +17,39 @@
 package controllers
 
 import javax.inject.Inject
-
 import config.FrontendAppConfig
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
+import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
-import services.VatService
+import services.{MandationStatusFetcherService, VatService}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
-import views.html.partialAgentSignedUpMtd
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class PartialController @Inject()(
                                   override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
-                                  serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
+                                  serviceInfo: VatSummaryAction,
                                   appConfig: FrontendAppConfig,
-                                  vatService: VatService
+                                  vatService: VatService,
+                                  mandationStatusFetcherService: MandationStatusFetcherService
                                  ) extends FrontendController with I18nSupport {
 
-  def onPageLoad = authenticate.async  {
-    implicit request =>
-      vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
-        vatModel => {
-          val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
-          //TODO Call Service to retrieve mandation status here
-          val mandationStatus = true
-          mandationStatus match {
-            case true => Ok(partialAgentSignedUpMtd(appConfig))
-            case _ => Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
-          }
+  def onPageLoad = (authenticate andThen serviceInfo).async {
 
-        }
-      )
+    implicit request =>
+        vatService.fetchVatModel(Some(request.request.vatDecEnrolment)).map(
+          vatModel => {
+            //TODO Call Jack's service to retrieve mandation status here
+            mandationStatusFetcherService.getMandationStatus match {
+              case true => Ok(request.vatMtdPartialContent)
+              case _ => {
+                val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)(request.request)
+                Ok(partial(request.request.vatDecEnrolment.vrn, appConfig, accountView))
+              }
+            }
+          }
+        )
   }
 }

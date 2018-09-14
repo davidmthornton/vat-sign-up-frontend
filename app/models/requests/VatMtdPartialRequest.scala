@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.FrontendAppConfig
-@(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+package models.requests
 
-<div class="section divider--bottom">
-    <h2>@messages("claim.enrolment.partial.heading")</h2>
-    <h3>@messages("claim.enrolment.partial.details")</h3>
-    <div class="panel panel-border-wide">
-      <a id="claim-mtd-vat-link" href="@appConfig.addMtdVatEnrolmentUrl"
-        data-journey-click="link - click:claimVatMtdEnrolment.partial:Add Making Tax Digital for VAT to my account">@messages("claim.enrolment.partial.link")</a>
-    </div>
-</div>
+import play.api.mvc.WrappedRequest
+import play.twirl.api.Html
+
+case class VatMtdPartialRequest[A](request: AuthenticatedRequest[A], vatMtdPartialContent: Html) extends WrappedRequest[A](request)
