@@ -25,6 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
+import views.html.partialAgentSignedUpMtd
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -42,7 +43,13 @@ class PartialController @Inject()(
       vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
         vatModel => {
           val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
-          Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
+          //TODO Call Service to retrieve mandation status here
+          val mandationStatus = true
+          mandationStatus match {
+            case true => Ok(partialAgentSignedUpMtd(appConfig))
+            case _ => Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
+          }
+
         }
       )
   }

@@ -139,6 +139,14 @@ partial.useSoftware.detail = From April 2019, VAT registered businesses with a t
 partial.findOutMore = Find out more about changes to VAT
 
 #######################################################
+##  VAT MTD Claim Enrolment Partial
+#######################################################
+
+claim.enrolment.partial.heading = Your agent has signed you up to Making Tax Digital for VAT
+claim.enrolment.partial.details = From April 2019, VAT registered businesses with a turnover of £85,000 or above must use relevant third party software to submit their VAT Returns.
+claim.enrolment.partial.link = Add Making Tax Digital for VAT to my account
+
+#######################################################
 ##  Not Activated
 #######################################################
 notactivated.activate = Activate
